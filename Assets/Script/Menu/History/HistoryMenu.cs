@@ -17,7 +17,7 @@ namespace YARG.Menu.History
 {
     public class HistoryMenu : ListMenu<ViewType, HistoryView>
     {
-        private const string HISTORY_TAB = "History";
+        private const string HISTORY_TAB          = "History";
         private const string IMPORTED_REPLAYS_TAB = "Import";
 
         private static readonly (string UnlocalizedName, DateTime MinTime)[] _categoryTimes =
@@ -59,8 +59,10 @@ namespace YARG.Menu.History
                     }),
                 new NavigationScheme.Entry(MenuAction.Green, "Menu.Common.Confirm",
                     () => CurrentSelection?.ViewClick()),
-
-                new NavigationScheme.Entry(MenuAction.Red, "Menu.Common.Back", Back),
+                new NavigationScheme.Entry(MenuAction.Red, "Menu.Common.Back",
+                    Back),
+                new NavigationScheme.Entry(MenuAction.Yellow, "Menu.Common.Analyze",
+                    () => CurrentSelection?.Shortcut1()),
             }, false));
 
             _headerTabs.TabChanged += OnTabChanged;
@@ -156,7 +158,8 @@ namespace YARG.Menu.History
             }
 
             // Ask the user for an ending location
-            FileExplorerHelper.OpenSaveFile(null, Path.GetFileNameWithoutExtension(name), "replay", path => {
+            FileExplorerHelper.OpenSaveFile(null, Path.GetFileNameWithoutExtension(name), "replay", path =>
+            {
                 // Delete the file if it already exists
                 if (File.Exists(path)) File.Delete(path);
 

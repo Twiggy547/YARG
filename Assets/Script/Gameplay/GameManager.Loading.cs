@@ -42,6 +42,8 @@ namespace YARG.Gameplay
         [SerializeField]
         private GameObject _fiveLaneDrumsPrefab;
         [SerializeField]
+        private GameObject _proKeysPrefab;
+        [SerializeField]
         private GameObject _proGuitarPrefab;
 
         private LoadFailureState _loadState;
@@ -358,8 +360,8 @@ namespace YARG.Gameplay
                         GameMode.SixFretGuitar  => _sixFretGuitarPrefab,
                         GameMode.FourLaneDrums  => _fourLaneDrumsPrefab,
                         GameMode.FiveLaneDrums  => _fiveLaneDrumsPrefab,
+                        GameMode.ProKeys        => _proKeysPrefab,
                         GameMode.ProGuitar      => _proGuitarPrefab,
-
                         _ => null
                     };
 
@@ -367,7 +369,7 @@ namespace YARG.Gameplay
                     if (prefab == null) continue;
 
                     var playerObject = Instantiate(prefab,
-                        new Vector3(index * 100f, 100f, 0f), prefab.transform.rotation);
+                        new Vector3(index * TRACK_SPACING_X, 100f, 0f), prefab.transform.rotation);
 
                     // Setup player
                     var trackPlayer = playerObject.GetComponent<TrackPlayer>();
@@ -395,9 +397,15 @@ namespace YARG.Gameplay
                     }
 
                     // Create the player on the vocal track
+
                     var vocalsPlayer = VocalTrack.CreatePlayer();
+
                     var playerHud = _trackViewManager.CreateVocalsPlayerHUD();
-                    vocalsPlayer.Initialize(index, player, Chart, playerHud, lastHighScore);
+
+                    var percussionTrack = VocalTrack.CreatePercussionTrack();
+                    percussionTrack.TrackSpeed = VocalTrack.TrackSpeed;
+                    vocalsPlayer.Initialize(index, player, Chart, playerHud, percussionTrack, lastHighScore);
+
                     _players.Add(vocalsPlayer);
                 }
 

@@ -124,7 +124,7 @@ namespace YARG.Input
             if (Mode != GameMode.Vocals)
                 return false;
 
-            AddBinding(VocalsAction.StarPower, gamepad.selectButton);
+            AddBinding(VocalsAction.Hit, gamepad.selectButton);
 
             return true;
         }

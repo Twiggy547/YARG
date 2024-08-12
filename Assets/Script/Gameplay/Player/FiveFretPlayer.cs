@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
-using YARG.Audio;
 using YARG.Core;
 using YARG.Core.Audio;
 using YARG.Core.Chart;
 using YARG.Core.Engine.Guitar;
 using YARG.Core.Engine.Guitar.Engines;
+using YARG.Core.Game;
 using YARG.Core.Input;
 using YARG.Core.Logging;
 using YARG.Gameplay.HUD;
@@ -74,6 +74,7 @@ namespace YARG.Gameplay.Player
             {
                 // Create the engine params from the engine preset
                 EngineParams = Player.EnginePreset.FiveFretGuitar.Create(StarMultiplierThresholds, isBass);
+                //EngineParams = EnginePreset.Precision.FiveFretGuitar.Create(StarMultiplierThresholds, isBass);
             }
             else
             {
@@ -81,7 +82,7 @@ namespace YARG.Gameplay.Player
                 EngineParams = (GuitarEngineParameters) Player.EngineParameterOverride;
             }
 
-            var engine = new YargFiveFretEngine(NoteTrack, SyncTrack, EngineParams);
+            var engine = new YargFiveFretEngine(NoteTrack, SyncTrack, EngineParams, Player.Profile.IsBot);
 
             HitWindow = EngineParams.HitWindow;
 
@@ -99,6 +100,8 @@ namespace YARG.Gameplay.Player
 
             engine.OnStarPowerPhraseHit += OnStarPowerPhraseHit;
             engine.OnStarPowerStatus += OnStarPowerStatus;
+
+            engine.OnCountdownChange += OnCountdownChange;
 
             return engine;
         }
@@ -166,7 +169,7 @@ namespace YARG.Gameplay.Player
 
             if (GameManager.Paused) return;
 
-            foreach (var note in chordParent.ChordEnumerator())
+            foreach (var note in chordParent.AllNotes)
             {
                 (NotePool.GetByKey(note) as FiveFretNoteElement)?.HitNote();
 
@@ -185,7 +188,7 @@ namespace YARG.Gameplay.Player
         {
             base.OnNoteMissed(index, chordParent);
 
-            foreach (var note in chordParent.ChordEnumerator())
+            foreach (var note in chordParent.AllNotes)
             {
                 (NotePool.GetByKey(note) as FiveFretNoteElement)?.MissNote();
             }
@@ -207,7 +210,7 @@ namespace YARG.Gameplay.Player
 
         private void OnSustainStart(GuitarNote parent)
         {
-            foreach (var note in parent.ChordEnumerator())
+            foreach (var note in parent.AllNotes)
             {
                 if (parent.IsDisjoint && parent != note)
                 {
@@ -223,7 +226,7 @@ namespace YARG.Gameplay.Player
 
         private void OnSustainEnd(GuitarNote parent, double timeEnded, bool finished)
         {
-            foreach (var note in parent.ChordEnumerator())
+            foreach (var note in parent.AllNotes)
             {
                 if (parent.IsDisjoint && parent != note)
                 {

@@ -40,6 +40,7 @@ namespace YARG.Settings
                 new ButtonRowMetadata(nameof(Settings.OpenVenueFolder)),
                 nameof(Settings.DisableGlobalBackgrounds),
                 nameof(Settings.DisablePerSongBackgrounds),
+                nameof(Settings.WaitForSongVideo),
 
                 new HeaderMetadata("StatusBar"),
                 nameof(Settings.ShowBattery),
@@ -79,6 +80,7 @@ namespace YARG.Settings
                 nameof(Settings.SongVolume),
                 nameof(Settings.CrowdVolume),
                 nameof(Settings.SfxVolume),
+                nameof(Settings.DrumSfxVolume),
                 nameof(Settings.PreviewVolume),
                 nameof(Settings.MusicPlayerVolume),
                 nameof(Settings.VocalMonitoring),
@@ -122,9 +124,11 @@ namespace YARG.Settings
                 nameof(Settings.EnablePracticeSP),
                 nameof(Settings.NoteStreakFrequency),
                 nameof(Settings.LyricDisplay),
+                nameof(Settings.UpcomingLyricsTime),
                 nameof(Settings.SongTimeOnScoreBox),
                 nameof(Settings.GraphicalProgressOnScoreBox),
-                nameof(Settings.KeepSongInfoVisible)
+                nameof(Settings.KeepSongInfoVisible),
+                nameof(Settings.CountdownDisplay)
             },
             new PresetsTab("Presets", icon: "Customization"),
             new AllSettingsTab(),
@@ -184,6 +188,7 @@ namespace YARG.Settings
             {
                 nameof(Settings.InputDeviceLogging),
                 nameof(Settings.ShowAdvancedMusicLibraryOptions),
+                nameof(Settings.MinimumLogLevel),
             },
             new MetadataTab("Experimental", icon: "Beaker", new ExperimentalPreviewBuilder())
             {

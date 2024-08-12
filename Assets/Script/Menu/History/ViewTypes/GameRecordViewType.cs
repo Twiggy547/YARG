@@ -1,7 +1,11 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using YARG.Core.Logging;
 using YARG.Core.Replays;
+using YARG.Core.Replays.Analyzer;
 using YARG.Core.Song;
 using YARG.Helpers;
 using YARG.Localization;
@@ -20,6 +24,7 @@ namespace YARG.Menu.History
         public override bool UseFullContainer => true;
 
         public readonly GameRecord GameRecord;
+
         private readonly SongEntry _songEntry;
 
         public GameRecordViewType(GameRecord gameRecord)
@@ -47,6 +52,13 @@ namespace YARG.Menu.History
             if (_songEntry is null) return;
 
             PlayReplay().Forget();
+        }
+
+        public override void Shortcut1()
+        {
+            if (_songEntry is null) return;
+
+            AnalyzeReplay();
         }
 
         private async UniTaskVoid PlayReplay()
@@ -98,6 +110,44 @@ namespace YARG.Menu.History
             }
 
             LoadIntoReplay(replayEntry, _songEntry);
+        }
+
+        private void AnalyzeReplay()
+        {
+            var chart = _songEntry.LoadChart();
+
+            if (chart is null)
+            {
+                YargLogger.LogError("Chart did not load");
+                return;
+            }
+
+            var replayReadResult = ReplayIO.ReadReplay(Path.Combine(ScoreContainer.ScoreReplayDirectory, GameRecord.ReplayFileName), out var replayFile);
+            if (replayReadResult != ReplayReadResult.Valid)
+            {
+                YargLogger.LogFormatError("Replay did not load. {0}", replayReadResult);
+                return;
+            }
+
+            var replay = replayFile!.Replay;
+
+            var results = ReplayAnalyzer.AnalyzeReplay(chart, replay);
+
+            for(int i = 0; i < results.Length; i++)
+            {
+                var analysisResult = results[i];
+
+                var profile = replay.Frames[i].PlayerInfo.Profile;
+                if (analysisResult.Passed)
+                {
+                    YargLogger.LogFormatInfo("({0}, {1}/{2}) PASSED verification!", profile.Name, profile.CurrentInstrument, profile.CurrentDifficulty);
+                }
+                else
+                {
+                    YargLogger.LogFormatWarning("({0}, {1}/{2}) FAILED verification",
+                        profile.Name, profile.CurrentDifficulty, profile.CurrentDifficulty);
+                }
+            }
         }
 
 #nullable enable

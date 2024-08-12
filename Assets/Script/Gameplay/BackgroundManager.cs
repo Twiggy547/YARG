@@ -9,6 +9,7 @@ using YARG.Core.Extensions;
 using YARG.Core.IO;
 using YARG.Core.Venue;
 using YARG.Helpers.Extensions;
+using YARG.Settings;
 using YARG.Venue;
 
 namespace YARG.Gameplay
@@ -26,7 +27,6 @@ namespace YARG.Gameplay
 
         private bool _videoStarted = false;
         private bool _videoSeeking = false;
-        private bool _compensateInputOnSeek = false;
 
         // These values are relative to the video, not to song time!
         // A negative start time will delay when the video starts, a positive one will set the video position
@@ -227,8 +227,8 @@ namespace YARG.Gameplay
 
                         // Hack to ensure the video stays synced to the audio
                         _videoSeeking = true; // Signaling flag; must come first
-                        _compensateInputOnSeek = !GameManager.Paused;
-                        GameManager.Pause(showMenu: false);
+                        if (SettingsManager.Settings.WaitForSongVideo.Value)
+                            GameManager.OverridePause();
 
                         _videoPlayer.time = videoTime;
                     }
@@ -241,8 +241,8 @@ namespace YARG.Gameplay
             if (!_videoSeeking)
                 return;
 
-            GameManager.Resume(inputCompensation: _compensateInputOnSeek);
-            player.Play();
+            if (!SettingsManager.Settings.WaitForSongVideo.Value || GameManager.OverrideResume())
+                player.Play();
 
             enabled = double.IsNaN(_videoEndTime);
             _videoSeeking = false;

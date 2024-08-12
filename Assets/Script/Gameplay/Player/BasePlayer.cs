@@ -16,6 +16,8 @@ namespace YARG.Gameplay.Player
 {
     public abstract class BasePlayer : GameplayBehaviour
     {
+        public int PlayerIndex { get; private set; }
+
         public YargPlayer Player { get; private set; }
 
         public float NoteSpeed
@@ -121,6 +123,7 @@ namespace YARG.Gameplay.Player
                 return;
             }
 
+            PlayerIndex = index;
             Player = player;
 
             SyncTrack = chart.SyncTrack;
@@ -211,12 +214,6 @@ namespace YARG.Gameplay.Player
             // Video offset is already accounted for
             time += InputCalibration;
 
-            if (Player.Profile.IsBot)
-            {
-                BaseEngine.UpdateBot(time);
-                return;
-            }
-
             if (GameManager.IsReplay)
             {
                 while (_replayInputIndex < ReplayInputs.Count)
@@ -236,14 +233,7 @@ namespace YARG.Gameplay.Player
                 }
             }
 
-            if (BaseEngine.IsInputQueued)
-            {
-                BaseEngine.UpdateEngineInputs();
-            }
-            else
-            {
-                BaseEngine.UpdateEngineToTime(time);
-            }
+            BaseEngine.Update(time);
         }
 
         private void SubscribeToInputEvents()

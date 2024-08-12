@@ -269,7 +269,7 @@ namespace YARG.Gameplay.Player
             TrackMaterial.StarpowerMode = stats.IsStarPowerActive;
 
             ComboMeter.SetCombo(stats.ScoreMultiplier, maxMultiplier, stats.Combo);
-            StarpowerBar.SetStarpower(stats.StarPowerAmount, stats.IsStarPowerActive);
+            StarpowerBar.SetStarpower(stats.StarPowerBarAmount, stats.IsStarPowerActive);
             SunburstEffects.SetSunburstEffects(groove, stats.IsStarPowerActive);
 
             TrackView.UpdateNoteStreak(stats.Combo);
@@ -293,7 +293,7 @@ namespace YARG.Gameplay.Player
 
             _previousBassGrooveState = currentBassGrooveState;
 
-            double currentStarPowerAmount = stats.StarPowerAmount;
+            double currentStarPowerAmount = stats.StarPowerBarAmount;
 
             if (!stats.IsStarPowerActive && _previousStarPowerAmount < 0.5 && currentStarPowerAmount >= 0.5)
             {
@@ -304,7 +304,7 @@ namespace YARG.Gameplay.Player
 
             foreach (var haptics in SantrollerHaptics)
             {
-                haptics.SetStarPowerFill((float) BaseStats.StarPowerAmount);
+                haptics.SetStarPowerFill((float) BaseStats.StarPowerBarAmount);
             }
         }
 
@@ -322,6 +322,8 @@ namespace YARG.Gameplay.Player
 
                 NoteIndex++;
 
+                OnNoteSpawned(note);
+
                 // Don't spawn hit or missed notes
                 if (note.WasHit || note.WasMissed)
                 {
@@ -329,11 +331,15 @@ namespace YARG.Gameplay.Player
                 }
 
                 // Spawn all of the notes and child notes
-                foreach (var child in note.ChordEnumerator())
+                foreach (var child in note.AllNotes)
                 {
                     SpawnNote(child);
                 }
             }
+        }
+
+        protected virtual void OnNoteSpawned(TNote parentNote)
+        {
         }
 
         public override void SetPracticeSection(uint start, uint end)
@@ -472,6 +478,11 @@ namespace YARG.Gameplay.Player
             {
                 haptic.SetSolo(false);
             }
+        }
+
+        protected virtual void OnCountdownChange(int measuresLeft, double countdownLength, double endTime)
+        {
+            TrackView.UpdateCountdown(measuresLeft, countdownLength, endTime);
         }
 
         protected virtual void OnStarPowerPhraseHit(TNote note)

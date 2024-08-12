@@ -20,6 +20,21 @@ namespace YARG.Menu.History
 
         }
 
+        public virtual void Shortcut1()
+        {
+
+        }
+
+        public virtual void Shortcut2()
+        {
+
+        }
+
+        public virtual void Shortcut3()
+        {
+
+        }
+
         public virtual GameInfo? GetGameInfo()
         {
             return null;

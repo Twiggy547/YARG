@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Net;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -63,6 +63,7 @@ namespace YARG.Settings
 
             public ToggleSetting DisableGlobalBackgrounds { get; } = new(false);
             public ToggleSetting DisablePerSongBackgrounds { get; } = new(false);
+            public ToggleSetting WaitForSongVideo { get; } = new(true);
 
             public ToggleSetting ShowBattery { get; } = new(false);
             public ToggleSetting ShowTime { get; } = new(false, ShowTimeCallback);
@@ -130,6 +131,9 @@ namespace YARG.Settings
 
             public VolumeSetting SfxVolume { get; } =
                 new(0.8f, v => GlobalAudioHandler.SetVolumeSetting(SongStem.Sfx, v));
+
+            public VolumeSetting DrumSfxVolume { get; } =
+                new(0.8f, v => GlobalAudioHandler.SetVolumeSetting(SongStem.DrumSfx, v));
 
             public VolumeSetting PreviewVolume { get; } = new(0.25f);
             public VolumeSetting MusicPlayerVolume { get; } = new(0.15f, MusicPlayerVolumeCallback);
@@ -235,7 +239,17 @@ namespace YARG.Settings
                     LyricDisplayMode.Disabled
                 };
 
+            public SliderSetting UpcomingLyricsTime { get; } = new(3f, 0f, 10f);
+
             public ToggleSetting KeepSongInfoVisible { get; } = new(false);
+
+            public DropdownSetting<CountdownDisplayMode> CountdownDisplay { get; }
+                = new(CountdownDisplayMode.Measures)
+                {
+                    CountdownDisplayMode.Measures,
+                    CountdownDisplayMode.Seconds,
+                    CountdownDisplayMode.Disabled
+                };
 
             #endregion
 
@@ -343,9 +357,34 @@ namespace YARG.Settings
 
             public ToggleSetting ShowAdvancedMusicLibraryOptions { get; } = new(false);
 
+            public DropdownSetting<LogLevel> MinimumLogLevel { get; } = new(
+#if UNITY_EDITOR
+                LogLevel.Debug,
+#else
+                LogLevel.Info,
+#endif
+                SetLogLevelCallback
+            )
+            {
+                LogLevel.Trace,
+                LogLevel.Debug,
+                LogLevel.Info,
+                LogLevel.Warning,
+                LogLevel.Error,
+                // No real need to distinguish these two,
+                // they're very important to have in logs regardless
+                // LogLevel.Exception,
+                // LogLevel.Failure,
+            };
+
             #endregion
 
             #region Callbacks
+
+            private static void SetLogLevelCallback(LogLevel level)
+            {
+                YargLogger.MinimumLogLevel = level;
+            }
 
             private static void ShowTimeCallback(bool value)
             {

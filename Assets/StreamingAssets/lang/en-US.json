@@ -132,7 +132,9 @@
             "Delete": "Delete",
 
             "Reset": "Reset",
-            "ResetAll": "Reset All"
+            "ResetAll": "Reset All",
+
+            "Analyze": "Analyze"
         },
         "Credits": {
             "Description": "Contributed To: {0}\n\n{1}",
@@ -469,6 +471,15 @@
                 "Name": "Star Power Claps",
                 "Description": "Enables claps to the beat while Star Power is active."
             },
+            "CountdownDisplay": {
+                "Name": "Countdown Display",
+                "Description": "Choose how countdowns should be displayed during long breaks in a song.",
+                "Dropdown": {
+                    "Measures": "In Measures",
+                    "Seconds": "In Seconds",
+                    "Disabled": "Disabled"
+                }
+            },
             "OverstrumAndOverhitSoundEffects": {
                 "Name": "Overstrum/Overhit Sound Effects",
                 "Description": "Enables the overstrum/overhit sound effect."
@@ -534,6 +545,10 @@
                 "Name": "Drums Volume",
                 "PauseName": "Drums",
                 "Description": "Adjusts the song's drum track volume. Only does something if the song is multi-track."
+            },
+            "DrumSfxVolume": {
+                "Name": "Drum SFX Volume",
+                "Description": "Adjusts the drum hit sound effect volume, which can be triggered before the first note, after the last note, or during drum fills/BREs."
             },
             "EnablePracticeSP": {
                 "Name": "Star Power in Practice",
@@ -611,6 +626,17 @@
                 "Name": "Master Music Volume",
                 "PauseName": "Master",
                 "Description": "Adjusts the song's volume as a whole."
+            },
+            "MinimumLogLevel": {
+                "Name": "Minimum Log Level",
+                "Description": "Controls how much information is written to log files.",
+                "Dropdown": {
+                    "Trace": "Trace",
+                    "Debug": "Debug",
+                    "Info": "Info",
+                    "Warning": "Warning",
+                    "Error": "Error"
+                }
             },
             "MicrophoneSensitivity": {
                 "Name": "Microphone Sensitivity (Db)",
@@ -833,6 +859,14 @@
                 "Name": "DMX Master Dimmer Values",
                 "Description": "These are the respective values that the Master Dimmer channels will be set to when YARG starts."
             },
+            "UpcomingLyricsTime": {
+                "Name": "Upcoming Lyrics Lead Time",
+                "Description": "The time in seconds prior to an upcoming lyric that it will appear on screen. Upcoming lyrics will always appear if the time between the current and upcoming lyrics is smaller than this value."
+            },
+            "WaitForSongVideo": {
+                "Name": "Wait For Song Videos When Seeking",
+                "Description": "Waits for a song-specific video background to finish seeking when restarting/changing sections in practice or seeking a replay."
+            },
             "WrapAroundNavigation": {
                 "Name": "Wrap-Around Navigation",
                 "Description": "Allow menus to jump to the bottom of a list when scrolling past the top, or jump to the top of a list when scrolling past the bottom."
@@ -875,12 +909,13 @@
                 }
             },
             "ColorProfile": {
-                "Instrument": {
+                "SubSection": {
                     "Name": "Instrument",
                     "Dropdown": {
                         "FiveFretGuitar": "Five Fret Guitar",
                         "FiveLaneDrums": "Five Lane Drums",
-                        "FourLaneDrums": "Four Lane Drums"
+                        "FourLaneDrums": "Four Lane Drums",
+                        "ProKeys": "Pro Keys"
                     }
                 },
                 "ActivationNote": {
@@ -1056,12 +1091,13 @@
                 }
             },
             "EnginePreset": {
-                "GameMode": {
+                "SubSection": {
                     "Name": "Game Mode",
                     "Dropdown": {
-                        "DrumsPreset": "Drums (4 and 5 lane)",
-                        "FiveFretGuitarPreset": "Five Fret Guitar",
-                        "VocalsPreset": "Vocals"
+                        "Drums": "Drums (4 and 5 lane)",
+                        "FiveFretGuitar": "Five Fret Guitar",
+                        "Vocals": "Vocals",
+                        "ProKeys": "Pro Keys"
                     }
                 },
                 "AntiGhosting": {
@@ -1112,21 +1148,45 @@
                     "Name": "Strum Leniency (No Notes)",
                     "Description": "The amount of time a note can be strummed before it enters the hit window and it still receive the strum. Strumming earlier than this will cause an overstrum."
                 },
-                "WindowSizeE": {
+                "PitchWindowE": {
                     "Name": "Window Size (Easy)",
                     "Description": "Size of the pitch leniency window (in semitones); in other words, how off-pitch the player can sing, and the game will still detect as a correct note, in the Easy difficulty."
                 },
-                "WindowSizeH": {
+                "PitchWindowH": {
                     "Name": "Window Size (Hard)",
                     "Description": "Size of the pitch leniency window (in semitones); in other words, how off-pitch the player can sing, and the game will still detect as a correct note, in the Hard difficulty."
                 },
-                "WindowSizeM": {
+                "PitchWindowM": {
                     "Name": "Window Size (Medium)",
                     "Description": "Size of the pitch leniency window (in semitones); in other words, how off-pitch the player can sing, and the game will still detect as a correct note, in the Medium difficulty."
                 },
-                "WindowSizeX": {
+                "PitchWindowX": {
                     "Name": "Window Size (Expert)",
                     "Description": "Size of the pitch leniency window (in semitones); in other words, how off-pitch the player can sing, and the game will still detect as a correct note, in the Expert difficulty."
+                },
+                "PercussionHitWindow": {
+                    "Name": "Percussion Hit Window"
+                },
+                "ChordStaggerWindow": {
+                    "Name": "Chord Stagger Window"
+                },
+                "FatFingerWindow": {
+                    "Name": "Fat Finger Window"
+                },
+                "DynamicScale": {
+                    "Name": "Dynamic Window Scale",
+                    "Description": "The factor used to scale the distance between the notes before the dynamic hit window size is calculated."
+                },
+                "DynamicSlope": {
+                    "Name": "Dynamic Window Slope",
+                    "Description": "Affects how fast the dynamic hit window itself shrinks."
+                },
+                "DynamicGamma": {
+                    "Name": "Dynamic Window Gamma",
+                    "Description": "Biases the dynamic hit window one way or another. Values below 1 gives, on average, a looser window."
+                },
+                "PerfectPitchPercent": {
+                    "Name": "Perfect Pitch Percent"
                 }
             }
         }
